@@ -1,2 +1,2 @@
 #!/bin/bash
-gs.getUser().getMyGroups
+groups
