@@ -1,1 +1,1 @@
-task 0.Where am I?
+script that creates an alias.
