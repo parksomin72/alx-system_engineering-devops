@@ -1,8 +1,29 @@
 #!/usr/bin/env bash
-# Configures an Ubuntu server as follows:
-#   - localhost resolves to 127.0.0.2
-#   - facebook.com resolves to 8.8.8.8
+#changes local host IP to 127.0.0.2
 
-cp /etc/hosts ~/hosts.new
-sed -i 's/127.*$/127.0.0.2 localhost\n8.8.8.8 facebook.com/' ~/hosts.new
-cp -f ~/hosts.new /etc/hosts
+# Function to add or update an entry in /etc/hosts
+add_to_hosts() {
+    local ip_address=$1
+    local hostname=$2
+    if grep -q "$hostname" /etc/hosts; then
+        sudo sed -i "s/.*$hostname.*/$ip_address $hostname/" /etc/hosts
+    else
+        echo "$ip_address $hostname" | sudo tee -a /etc/hosts > /dev/null
+    fi
+}
+
+# Check if the script is run with root privileges
+if [ "$EUID" -ne 0 ]; then
+    echo "This script must be run with root privileges."
+    exit 1
+fi
+
+# Add localhost entry
+add_to_hosts "127.0.0.2" "localhost"
+
+# Add facebook.com entry
+add_to_hosts "8.8.8.8" "facebook.com"
+
+# Display updated /etc/hosts file
+echo "Updated /etc/hosts file:"
+cat /etc/hosts
