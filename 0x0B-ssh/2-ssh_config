@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# This script configures the SSH client
+
+# Create or edit the SSH client configuration file
+echo "Host *
+  IdentityFile ~/.ssh/school
+  PasswordAuthentication no" > ~/.ssh/config
+
+# Inform the user about the configuration
+echo "SSH client configuration updated successfully."
