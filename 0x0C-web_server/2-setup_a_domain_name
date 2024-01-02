@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Bash script to set up a domain name and configure DNS records
+
+# Replace 'yourdomain.tech' with the actual domain name
+domain_name="yourdomain.tech"
+
+# Update DNS records with an A entry
+echo "$domain_name" > /tmp/domain_name
+echo "Updating DNS records..."
+# Replace 'web-01-ip-address' with the actual IP address of your web-01 server
+echo -e "IN\tA\tweb-01-ip-address" > /tmp/dns_records
+# Use the promo code obtained from .TECH Domains for free registration
+
+# Display the domain name in the answer file
+echo "$domain_name"
+
+# Display DNS records
+cat /tmp/dns_records
+
+# Verify DNS propagation
+echo "Verifying DNS propagation..."
+sleep 2h  # Wait for DNS propagation (adjust the time as needed)
+
+# Check DNS records using dig
+dig +short "$domain_name"
+
+# Check the registrar using whois
+registrar_name=$(whois -j "$domain_name" | jq -r '.registrarName')
+echo "Registrar Name: $registrar_name"
