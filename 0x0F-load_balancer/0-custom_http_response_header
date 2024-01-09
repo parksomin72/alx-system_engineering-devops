@@ -1,6 +1,23 @@
 #!/usr/bin/env bash
 # Configure Nginx with custom HTTP response header for load balancing
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
+    # Server name to match any
+    server_name _;
+
+    # Root directory and index files
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    # Location block for handling requests
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    # Add the custom header inside this block
+    add_header X-Served-By $hostname;
 # Install Nginx if not already installed
 sudo apt-get update
 sudo apt-get install -y nginx
@@ -14,3 +31,4 @@ sudo systemctl reload nginx
 # Ignore SC2154 for shellcheck
 # SC2154: Variable is referenced but not assigned
 # shellcheck disable=SC2154
+}
