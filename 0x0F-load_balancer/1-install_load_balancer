@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Configure HAProxy to send traffic to web-01 and web-02 using roundrobin algorithm
+
+# Install HAProxy
+sudo apt-get update
+sudo apt-get install -y haproxy
+
+# Configure HAProxy
+sudo mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.backup  # Backup existing config
+
+sudo cat <<EOL > /etc/haproxy/haproxy.cfg
+frontend web_front
+    bind *:80
+    mode http
+    default_backend web_servers
+
+backend web_servers
+    mode http
+    balance roundrobin
+    server web-01 [web-01-IP]:80 check
+    server web-02 [web-02-IP]:80 check
+EOL
+
+# Restart HAProxy to apply changes
+sudo systemctl restart haproxy
+
+# Ensure HAProxy can be managed via init script
+sudo systemctl enable haproxy
+
+# Ignore SC2154 for shellcheck
+# SC2154: Variable is referenced but not assigned
+# shellcheck disable=SC2154
