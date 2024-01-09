@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Configure Nginx with custom HTTP response header for load balancing
+
+# Install Nginx if not already installed
+sudo apt-get update
+sudo apt-get install -y nginx
+
+# Add custom header configuration to Nginx
+echo "add_header X-Served-By \$hostname;" | sudo tee -a /etc/nginx/sites-available/default
+
+# Reload Nginx to apply changes
+sudo systemctl reload nginx
+
+# Ignore SC2154 for shellcheck
+# SC2154: Variable is referenced but not assigned
+# shellcheck disable=SC2154
