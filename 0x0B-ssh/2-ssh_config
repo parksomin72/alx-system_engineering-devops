@@ -1,10 +1,6 @@
-#!/usr/bin/env bash
-# This script configures the SSH client
+Host school
+    Hostname 34.204.61.67
+    User ubuntu
+    IdentityFile ~/.ssh/school
 
-# Create or edit the SSH client configuration file
-echo "Host *
-  IdentityFile ~/.ssh/school
-  PasswordAuthentication no" > ~/.ssh/config
-
-# Inform the user about the configuration
-echo "SSH client configuration updated successfully."
+    PasswordAuthentication no
