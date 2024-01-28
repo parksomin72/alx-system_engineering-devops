@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-# This script creates an RSA key pair
+#create ssh keypair to connect to server
 
-# Provide a passphrase interactively
-read -sp "Enter passphrase for the key: " passphrase
-
-# Generate the RSA key pair with 4096 bits and the provided passphrase
-ssh-keygen -t rsa -b 4096 -f school -N "$passphrase"
-
-# Inform the user about the key generation
-echo -e "\nRSA key pair generated successfully."
+ssh-keygen -t rsa -b 4096 -f school -N betty
