@@ -1,11 +1,10 @@
-# Puppet manifest to configure SSH client
+# configure ssh_config file to refuse password
 
-file_line { 'Turn off passwd auth':
-  path  => '/etc/ssh/ssh_config',
-  line  => 'PasswordAuthentication no',
-}
-
-file_line { 'Declare identity file':
-  path  => '/etc/ssh/ssh_config',
-  line  => 'IdentityFile ~/.ssh/school',
+file {'/etc/ssh/ssh_config':
+	ensure	=> present,
+	content	=> @(EOF),
+		Host*
+			PasswordAuthentication no
+			IdentityFile ~/.ssh/school
+EOF
 }
