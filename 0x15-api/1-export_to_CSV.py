@@ -1,55 +1,36 @@
 #!/usr/bin/python3
-"""Fetch employee todos info and export into csv format
 """
+Check student .CSV output of user information
+"""
+
 import csv
 import requests
-from sys import argv
+import sys
+
+users_url = "https://jsonplaceholder.typicode.com/users?id="
+todos_url = "https://jsonplaceholder.typicode.com/todos"
 
 
-def fetch_user_data(employee_id):
-    user_response = requests.get(
-        f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-    )
-    return user_response.json()
+def user_info(id):
+    """ Check user information """
 
+    total_tasks = 0
+    response = requests.get(todos_url).json()
+    for i in response:
+        if i['userId'] == id:
+            total_tasks += 1
 
-def fetch_todo_data(employee_id):
-    todos_response = requests.get(
-        f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
-    )
-    return todos_response.json()
+    num_lines = 0
+    with open(str(id) + ".csv", 'r', newline='', encoding='utf-8') as f:
+        csv_reader = csv.reader(f)
+        for _ in csv_reader:
+            num_lines += 1
 
-
-def export_to_csv(employee_id, username, todos_data):
-    csv_filename = f"{employee_id}.csv"
-
-    with open(csv_filename, 'w', newline='\n') as csv_file:
-        fieldnames = ["userId", "username", "completed", "title"]
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
-        writer.writeheader()
-
-        for task in todos_data:
-            writer.writerow({
-                "userId": employee_id,
-                "username": username,
-                "completed": str(task.get('completed')),
-                "title": task.get('title')
-            })
+    if total_tasks == num_lines - 1:
+        print("Number of tasks in CSV: OK")
+    else:
+        print("Number of tasks in CSV: Incorrect")
 
 
 if __name__ == "__main__":
-    if len(argv) != 2:
-        print("Usage: ./1-export_to_CSV.py <employee id>")
-        exit()
-
-    employee_id = argv[1]
-    user_data = fetch_user_data(employee_id)
-
-    if not user_data:
-        exit()
-
-    username = user_data.get('username')
-    todos_data = fetch_todo_data(employee_id)
-
-    export_to_csv(employee_id, username, todos_data)
-    print(f"Data exported to {employee_id}.csv")
+    user_info(int(sys.argv[1]))
