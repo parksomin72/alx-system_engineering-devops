@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This script is displaying "Best School" 10 times.
 # print Hi instead on the 9th iteration
 counter=1
