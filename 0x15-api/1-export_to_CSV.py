@@ -14,22 +14,18 @@ todos_url = "https://jsonplaceholder.typicode.com/todos"
 def user_info(id):
     """ Check user information """
 
-    total_tasks = 0
-    response = requests.get(todos_url).json()
-    for i in response:
-        if i['userId'] == id:
-            total_tasks += 1
+    response = requests.get(users_url + str(id)).json()
+    username = response[0]['username']
 
-    num_lines = 0
-    with open(str(id) + ".csv", 'r', newline='', encoding='utf-8') as f:
+    with open(str(id) + ".csv", 'r') as f:
         csv_reader = csv.reader(f)
-        for _ in csv_reader:
-            num_lines += 1
+        header = next(csv_reader)  # Skip the header
+        for row in csv_reader:
+            if row[0] != str(id) or row[1] != username:
+                print("User ID or Username: Incorrect")
+                return
 
-    if total_tasks == num_lines - 1:
-        print("Number of tasks in CSV: OK")
-    else:
-        print("Number of tasks in CSV: Incorrect")
+    print("User ID and Username: OK")
 
 
 if __name__ == "__main__":
