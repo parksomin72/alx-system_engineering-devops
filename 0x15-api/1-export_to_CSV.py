@@ -1,8 +1,8 @@
 #!/usr/bin/python3
-"""Fetch and export employee todos info to CSV
+"""Fetch employee todos info and export into csv format
 """
-import requests
 import csv
+import requests
 from sys import argv
 
 
@@ -20,19 +20,21 @@ def fetch_todo_data(employee_id):
     return todos_response.json()
 
 
-def export_to_csv(user_data, todos_data):
-    user_id = user_data.get('id')
-    username = user_data.get('username')
-    csv_filename = f"{user_id}.csv"
+def export_to_csv(employee_id, username, todos_data):
+    csv_filename = f"{employee_id}.csv"
 
-    with open(csv_filename, mode='w', newline='') as csv_file:
-        csv_writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-        csv_writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
+    with open(csv_filename, 'w', newline='') as csv_file:
+        fieldnames = ["userId", "username", "completed", "title"]
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
+        writer.writeheader()
 
         for task in todos_data:
-            task_completed_status = str(task['completed'])
-            task_title = task['title']
-            csv_writer.writerow([user_id, username, task_completed_status, task_title])
+            writer.writerow({
+                "userId": employee_id,
+                "username": username,
+                "completed": str(task.get('completed')),
+                "title": task.get('title')
+            })
 
 
 if __name__ == "__main__":
@@ -46,6 +48,8 @@ if __name__ == "__main__":
     if not user_data:
         exit()
 
+    username = user_data.get('username')
     todos_data = fetch_todo_data(employee_id)
-    export_to_csv(user_data, todos_data)
+
+    export_to_csv(employee_id, username, todos_data)
     print(f"Data exported to {employee_id}.csv")
