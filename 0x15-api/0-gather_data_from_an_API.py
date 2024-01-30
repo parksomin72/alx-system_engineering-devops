@@ -34,7 +34,8 @@ if __name__ == "__main__":
 
     todos_data = fetch_todo_data(employee_id)
     completed_tasks = [
-    task['title'] for task in todos_data if task['completed']]
+    task['title'] for task in todos_data if task['completed']
+    ]
 
     print(f"Employee {employee_name} is done with tasks"
           f"({len(completed_tasks)}/{len(todos_data)}):")
