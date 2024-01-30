@@ -23,7 +23,7 @@ def fetch_todo_data(employee_id):
 def export_to_csv(employee_id, username, todos_data):
     csv_filename = f"{employee_id}.csv"
 
-    with open(csv_filename, 'w', newline='') as csv_file:
+    with open(csv_filename, 'w', newline='\n') as csv_file:
         fieldnames = ["userId", "username", "completed", "title"]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
         writer.writeheader()
