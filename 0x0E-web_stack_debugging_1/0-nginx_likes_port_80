@@ -25,3 +25,11 @@ pgrep -l nginx
 
 echo "Listening on port 80:"
 netstat -tln | grep ":80 "
+
+# Confirm Nginx returns a web page on port 80 with HTTP 200
+response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost)
+if [ "$response" -eq 200 ]; then
+    echo "Nginx returned HTTP 200 on port 80."
+else
+    echo "Nginx did not return HTTP 200 on port 80. Please check the configuration."
+fi
