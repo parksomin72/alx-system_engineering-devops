@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
-# Relink nginx config file and restart nginx server
 ln -fs /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 service nginx restart
+sleep 2
+service nginx status | grep -q "not running" && echo "Nginx is not running." || echo "Nginx is running."
