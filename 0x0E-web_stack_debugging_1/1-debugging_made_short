@@ -3,13 +3,3 @@
 # Relink nginx config file and restart nginx server
 ln -fs /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 service nginx restart
-
-# Allow some time for Nginx to fully start
-sleep 2
-
-# Check the status of Nginx
-if service nginx status | grep -q "not running"; then
-    echo "Nginx is not running."
-else
-    echo "Nginx is running."
-fi
