@@ -1,35 +1,5 @@
 #!/usr/bin/env bash
 
-# Install necessary packages
-apt-get update
-apt-get install -y nginx
-
-# Check if Nginx is running
-if ! pgrep -x "nginx" >/dev/null; then
-    # If not running, start Nginx
-    service nginx start
-fi
-
-# Check if Nginx is listening on port 80
-if ! (netstat -tln | grep -q ":80 "); then
-    # If not listening, update Nginx configuration to listen on port 80
-    sed -i '/listen 80 default_server;/s/^#//g' /etc/nginx/sites-available/default
-
-    # Reload Nginx configuration
-    service nginx reload
-fi
-
-# Display Nginx processes and listening ports
-echo "Nginx processes:"
-pgrep -l nginx
-
-echo "Listening on port 80:"
-netstat -tln | grep ":80 "
-
-# Confirm Nginx returns a web page on port 80 with HTTP 200
-response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost)
-if [ "$response" -eq 200 ]; then
-    echo "Nginx returned HTTP 200 on port 80."
-else
-    echo "Nginx did not return HTTP 200 on port 80. Please check the configuration."
-fi
+# Relink nginx config file and restart nginx server
+ln -fs /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+service nginx restart
