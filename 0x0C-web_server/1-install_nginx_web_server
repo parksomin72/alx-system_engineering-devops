@@ -1,16 +1,39 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Update package list and install nginx
-apt-get update
-apt-get -y install nginx
+# Set up colors for terminal output
+BLUE='\e[1;34m'
+BROWN='\e[0;33m'
+GREEN='\e[1;32m'
+RESET='\033[0m'
 
-# Create a default index.html file with Hello World!
-echo "Hello World!" > /var/www/html/index.html
+# Print a message with blue color
+echo -e "${BLUE}Updating and installing ${BROWN}Nginx${BLUE}.${RESET}\n"
 
-# Replace the default Nginx configuration to listen on port 80
-sed -i 's/80 default_server/80 default_server;/g' /etc/nginx/sites-available/default
+# Update and install Nginx
+sudo apt-get update -y -qq
+sudo apt-get install nginx -y
+
+# Print a message with blue color
+echo -e "\n${BLUE}Performing additional setup.${RESET}\n"
+
+# Start Nginx service
+sudo service nginx start
+
+# Allow Nginx on the firewall
+sudo ufw allow 'Nginx HTTP'
+
+# Give the user ownership of website files
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
+
+# Backup default index
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+
+# Create a new index with "Hello World!"
+echo -e "Hello World!" | sudo dd status=none of=/var/www/html/index.nginx-debian.html
 
 # Restart Nginx
-/etc/init.d/nginx restart
+sudo service nginx restart
 
-# End of script
+# Print a completion message with green color
+echo -e "\n${GREEN}Setup completed.${RESET} \n"
