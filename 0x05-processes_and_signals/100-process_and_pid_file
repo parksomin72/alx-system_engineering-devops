@@ -1,24 +1,40 @@
-#!/usr/bin/env bash
-# Creates the file /var/run/holbertonscript.pid containing its PID
-# print To infinity and beyond indefinitely
-# print I hate the kill command on SIGTERM
-# print Y U no love me?! on SIGINT
-# Deletes the file /var/run/holbertonscript.pid and terminate on QUIT or TERM
-echo $$ > /var/run/holbertonscript.pid
-handle_sigterm () {
-    echo I hate the kill command
-    rm /var/run/holbertonscript.pid
-    exit
+#!/bin/bash
+
+# Set the PID file path
+PID_FILE="/var/run/myscript.pid"
+
+# Function to handle cleanup on exit
+cleanup() {
+    echo "Deleting PID file and terminating the script."
+    rm -f "$PID_FILE"
+    exit 0
 }
-handle_sigint () {
-    echo Y U no love me?!
+
+# Function to handle SIGTERM signal
+sigterm_handler() {
+    echo "I hate the kill command"
 }
-handle_sigquit () {
-    rm /var/run/holbertonscript.pid
-    exit
+
+# Function to handle SIGINT signal
+sigint_handler() {
+    echo "Y U no love me?!"
 }
-trap handle_sigterm SIGTERM
-trap handle_sigint SIGINT
-trap handle_sigquit SIGQUIT
-while true ; do echo To infinity and beyond; sleep 2;
+
+# Function to handle SIGQUIT signal
+sigquit_handler() {
+    cleanup
+}
+
+# Trap signals and associate handlers
+trap 'sigterm_handler' SIGTERM
+trap 'sigint_handler' SIGINT
+trap 'sigquit_handler' SIGQUIT
+
+# Display PID and create PID file
+echo $$ > "$PID_FILE"
+
+# Display the message indefinitely
+echo "To infinity and beyond"
+while true; do
+    sleep 1
 done
