@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Set the PID file path
 PID_FILE="/var/run/myscript.pid"
