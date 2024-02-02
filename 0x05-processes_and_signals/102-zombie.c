@@ -1,16 +1,35 @@
-uth: Brennan D Baraban
- */
-
 #include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 #include <unistd.h>
-
+#include <stdlib.h>
+int infinite_while(void);
 /**
- * infinite_while - Run an infinite while loop.
+ * main - create zombie processes
  *
- * Return: Always 0.
+ * Return: 0
+ */
+int main(void)
+{
+	pid_t pid = 1;
+	int i;
+
+	for (i = 0; i < 5; i++)
+	{
+		pid = fork();
+		if (pid > 0)
+			printf("Zombie process created, PID: %d\n", pid);
+		else
+			break;
+	}
+	if (pid > 0)
+		infinite_while();
+	else
+		exit(0);
+	return (0);
+}
+/**
+ * infinite_while - wait forever
+ *
+ * Return: 0
  */
 int infinite_while(void)
 {
@@ -19,32 +38,4 @@ int infinite_while(void)
 		sleep(1);
 	}
 	return (0);
-}
-
-/**
- * main - Creates five zombie processes.
- *
- * Return: Always 0.
- */
-int main(void)
-{
-	pid_t pid;
-	char count = 0;
-
-	while (count < 5)
-	{
-		pid = fork();
-		if (pid > 0)
-		{
-			printf("Zombie process created, PID: %d\n", pid);
-			sleep(1);
-			count++;
-		}
-		else
-			exit(0);
-	}
-
-	infinite_while();
-
-	return (EXIT_SUCCESS);
 }
