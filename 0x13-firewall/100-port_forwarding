@@ -1,20 +1,9 @@
 #!/usr/bin/env bash
+# web-01 is forwarding port 8080/TCP to port 80/TCP
 
 # Fixes a web server to run Nginx as the nginx user listening on port 8080.
-
-# Update Nginx user in nginx.conf
-sed -i "s/#user www-data/user nginx/" /etc/nginx/nginx.conf || { echo "Failed to update nginx.conf"; exit 1; }
-
-# Update port in default site configuration
-sed -i "s/80/8080/g" /etc/nginx/sites-available/default || { echo "Failed to update default site configuration"; exit 1; }
-
-# Adjust permissions for nginx.conf
-chmod 644 /etc/nginx/nginx.conf || { echo "Failed to adjust permissions for nginx.conf"; exit 1; }
-
-# Stop Apache if it's running
-service apache2 stop || { echo "Failed to stop Apache"; exit 1; }
-
-# Start Nginx as the nginx user
-sudo -u nginx service nginx start || { echo "Failed to start Nginx"; exit 1; }
-
-echo "Nginx configured successfully and started on port 8080."
+sed -i "s/#user www-data/user nginx/" /etc/nginx/nginx.conf
+sed -i "s/80/8080/g" /etc/nginx/sites-available/default
+chmod 644 /etc/nginx/nginx.conf
+pkill apache2
+sudo -u nginx service nginx start
