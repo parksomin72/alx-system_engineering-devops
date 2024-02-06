@@ -1,4 +1,5 @@
 #!/bin/bash
+# This script configures Nginx to run as the nginx user and listen on port 8080
 
 # Stop nginx if it's already running
 service nginx stop
