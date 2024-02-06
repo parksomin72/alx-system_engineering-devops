@@ -12,7 +12,7 @@ get_dns_info() {
     fi
 
     for sub in $sub_domain; do
-        dig_output=$(dig "$sub"."$domain" | awk '/ANSWER SECTION/ {getline; print}')
+        dig_output=$(dig "$sub"."$domain" +short)
         if [[ -n "$dig_output" ]]; then
             echo "The subdomain $sub is a $record_type record and points to $dig_output"
         fi
