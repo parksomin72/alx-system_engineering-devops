@@ -6,10 +6,10 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 
-whoami_command=$(which whoami)
+whoami_command=$(command -v whoami)
 if [ -z "$whoami_command" ]; then
     echo "Error: whoami command not found"
     exit 1
 fi
 
-sudo -u "$1" $whoami_command
+sudo -u "$1" "$whoami_command"
