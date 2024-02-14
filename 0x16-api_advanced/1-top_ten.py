@@ -1,31 +1,19 @@
 import requests
 
 def top_ten(subreddit):
-    """
-    Function that queries the Reddit API and prints the titles of the first 10
-    hot posts listed for a given subreddit.
-    """
-    url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
-    headers = {'User-Agent': 'Mozilla/5.0'}
-
+    url = "https://www.reddit.com/r/" + subreddit + "/hot.json?limit=10"
+    headers = {"User-Agent": "Custom User Agent"}
     response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
-        try:
-            data = response.json().get('data')
-            if data:
-                children = data.get('children')
-                if children:
-                    for post in children:
-                        print(post.get('data').get('title'))
-        except Exception as e:
-            print("Error parsing JSON: {}".format(e))
+        data = response.json()
+        children = data['data']['children']
+        for post in children:
+            print(post['data']['title'])
     else:
-        print("Request failed with status code {}".format(response.status_code))
+        print("Error: Unable to fetch data from Reddit API")
 
+# Test the function
 if __name__ == '__main__':
-    import sys
-    if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
-    else:
-        top_ten(sys.argv[1])
+    subreddit = input("Enter subreddit name: ")
+    top_ten(subreddit)
