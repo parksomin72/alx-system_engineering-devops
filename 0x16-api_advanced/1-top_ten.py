@@ -5,7 +5,7 @@ def top_ten(subreddit):
     Function that queries the Reddit API and prints the titles of the first 10
     hot posts listed for a given subreddit.
     """
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=10"
+    url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
     headers = {'User-Agent': 'Mozilla/5.0'}
 
     response = requests.get(url, headers=headers)
@@ -19,9 +19,9 @@ def top_ten(subreddit):
                     for post in children:
                         print(post.get('data').get('title'))
         except Exception as e:
-            print(f"Error parsing JSON: {e}")
+            print("Error parsing JSON: {}".format(e))
     else:
-        print(f"Request failed with status code {response.status_code}")
+        print("Request failed with status code {}".format(response.status_code))
 
 if __name__ == '__main__':
     import sys
