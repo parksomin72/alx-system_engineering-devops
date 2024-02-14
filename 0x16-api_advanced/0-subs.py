@@ -1,26 +1,25 @@
+#!/usr/bin/python3
+"""
+0-subs: A script to retrieve the number of subscribers
+for a given subreddit using the Reddit API.
+"""
+
 import requests
 
-
 def number_of_subscribers(subreddit):
+    """
+    Function that queries the Reddit API and returns the number of subscribers
+    for a given subreddit.
+    """
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
-    headers = {'User-Agent': 'MyAPI/0.0.1'}
-    response = requests.get(url, headers=headers)
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    response = requests.get(url, headers=headers, allow_redirects=False)
 
     if response.status_code == 200:
-        data = response.json()
-        return data['data']['subscribers']
+        return response.json().get('data', {}).get('subscribers', 0)
     else:
         return 0
 
-
-# Example usage
-if __name__ == "__main__":
-    # Existing subreddit
-    print("Output: existing subreddit")
-    result_existing = number_of_subscribers("programming")
-    print(result_existing)  # Output: OK
-
-    # Non-existing subreddit
-    print("Output: non-existing subreddit")
-    result_non_existing = number_of_subscribers("this_is_a_fake_subreddit")
-    print(result_non_existing)  # Output: OK
+if __name__ == '__main__':
+    number_of_subscribers = number_of_subscribers(input("Enter subreddit: "))
+    print(number_of_subscribers)
