@@ -1,6 +1,4 @@
-import requests
-
-def top_ten(subreddit):
+ubreddit):
     """
     Function that queries the Reddit API and prints the titles of the first 10
     hot posts listed for a given subreddit.
@@ -29,3 +27,4 @@ if __name__ == '__main__':
         print("Please pass an argument for the subreddit to search.")
     else:
         top_ten(sys.argv[1])
+
