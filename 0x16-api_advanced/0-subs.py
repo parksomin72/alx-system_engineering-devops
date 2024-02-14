@@ -4,7 +4,6 @@
 for a given subreddit using the Reddit API.
 """
 
-
 import requests
 
 def number_of_subscribers(subreddit):
@@ -17,10 +16,11 @@ def number_of_subscribers(subreddit):
     response = requests.get(url, headers=headers, allow_redirects=False)
 
     if response.status_code == 200:
-        return response.json().get('data', {}).get('subscribers', 0)
+        subscribers = response.json().get('data', {}).get('subscribers', 0)
+        return "Subreddit '{}' has {} subscribers.".format(subreddit, subscribers)
     else:
-        return 0
+        return "Subreddit '{}' does not exist or could not be accessed.".format(subreddit)
 
 if __name__ == '__main__':
-    number_of_subscribers = number_of_subscribers(input("Enter subreddit: "))
-    print(number_of_subscribers)
+    subreddit = input("Enter subreddit: ")
+    print(number_of_subscribers(subreddit))
