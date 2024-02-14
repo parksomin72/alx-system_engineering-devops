@@ -4,12 +4,13 @@
 """
 import requests
 
+
 def count_words(subreddit, word_list, after=None, word_count={}):
     """
-    Recursive function that queries the Reddit API, parses the title of all hot
-    articles, and prints a sorted count of given keywords.
+    Recursive function that queries the Reddit API, parses the title of all
+    hot articles, and prints a sorted count of given keywords.
     """
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
     params = {'limit': 100, 'after': after}
     headers = {'User-Agent': 'Mozilla/5.0'}
 
@@ -36,14 +37,16 @@ def count_words(subreddit, word_list, after=None, word_count={}):
     if after:
         count_words(subreddit, word_list, after, word_count)
     else:
-        sorted_counts = sorted(word_count.items(), key=lambda x: (-x[1], x[0]))
+        sorted_counts = sorted(word_count.items(),
+                               key=lambda x: (-x[1], x[0]))
         for word, count in sorted_counts:
-            print(f"{word}: {count}")
+            print("{}: {}".format(word, count))
 
 if __name__ == '__main__':
     import sys
     if len(sys.argv) < 3:
-        print("Usage: {} <subreddit> <list of keywords>".format(sys.argv[0]))
-        print("Ex: {} programming 'python java javascript'".format(sys.argv[0]))
+       print("Usage: {} <subreddit> <list of keywords>".format(sys.argv[0]))
+       print("Ex: {} programming 'python java javascript'"
+             .format(sys.argv[0]))
     else:
         count_words(sys.argv[1], sys.argv[2].split())
