@@ -45,6 +45,7 @@ if __name__ == '__main__':
     import sys
     if len(sys.argv) < 3:
        print("Usage: {} <subreddit> <list of keywords>".format(sys.argv[0]))
-       print("Ex: {} programming 'python java javascript'".format(sys.argv[0]))
+       print("Ex: {} programming 'python java javascript'"
+             .format(sys.argv[0]))
     else:
         count_words(sys.argv[1], sys.argv[2].split())
