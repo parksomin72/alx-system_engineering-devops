@@ -2,7 +2,7 @@
 
 # Fix for Apache returning a 500 error
 exec { 'fix-apache-500-error':
-  command     => '/bin/sed -i "s/LogLevel warn/LogLevel debug/g" /etc/apache2/apache2.conf',
+  command     => '/bin/sed -i "s/LogLevel warn/LogLevel debug/g" /etc/apache2/apache2.conf && service apache2 restart',
   path        => '/bin',
   refreshonly => true,
 }
