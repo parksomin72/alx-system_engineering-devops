@@ -1,16 +1,17 @@
 # Puppet manifest to fix Apache returning the correct page
 
 # Execute commands to fix the issue
-exec { 'fix_apache':
-  command     => 'service apache2 restart', # Restart Apache service
-  path        => '/usr/bin:/usr/sbin:/bin',
-  refreshonly => true,                      # Only execute when notified
+exec { 'fix-apache-error':
+  command     => '/bin/sed -i "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf',
+  path        => '/bin',
+  refreshonly => true,
 }
 
-# Notify the command to execute when Apache is restarted
+# Notify the command to execute when Apache is restar
 service { 'apache2':
-  ensure  => running,
-  require => Exec['fix_apache'],  # Ensure Apache is restarted after fix command execution
+  ensure    => running,
+  enable    => true,
+  subscribe => Exec['fix-apache-error'],
 }
 
 # Define a file resource to ensure the correct page is served
