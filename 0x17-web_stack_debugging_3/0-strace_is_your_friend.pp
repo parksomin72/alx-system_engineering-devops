@@ -7,23 +7,16 @@ exec { 'fix-apache-500-error':
   refreshonly => true,
 }
 
-# Configure Apache to serve the correct page
-file { '/var/www/html/index.html':
+# Intentionally cause an error in Apache configuration to return 500 status code
+file { '/etc/apache2/sites-available/000-default.conf':
   ensure  => present,
-  content => '<!DOCTYPE html>
-<html>
-<head>
-  <title>Holberton - Just another WordPress site</title>
-</head>
-<body>
-  <h1>Welcome to Holberton</h1>
-  <p>Yet another bug by a Holberton student</p>
-</body>
-</html>',
+  content => "This is an intentional error to cause Apache to return a 500 status code",
 }
 
+
+# Restart Apache to apply changes
 service { 'apache2':
   ensure    => running,
   enable    => true,
-  subscribe => Exec['fix-apache-500-error'],
+  require   => File['/etc/apache2/sites-available/000-default.conf'],
 }
