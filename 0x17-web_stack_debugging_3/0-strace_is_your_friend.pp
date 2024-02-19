@@ -1,4 +1,5 @@
 # 0-strace_is_your_friend.pp
+# Puppet manifest to fix Apache 500 error and ensure Apache returns a 200 status code
 
 # Fix for Apache returning a 500 error
 exec { 'fix-apache-500-error':
@@ -7,7 +8,13 @@ exec { 'fix-apache-500-error':
   refreshonly => true,
 }
 
-# Configure Apache to serve the correct page
+# Ensure Apache is running and enabled
+service { 'apache2':
+  ensure => running,
+  enable => true,
+}
+
+# Configure Apache to serve the correct page and verify that it returns a 200 status code
 file { '/var/www/html/index.html':
   ensure  => present,
   content => '<!DOCTYPE html>
@@ -22,8 +29,11 @@ file { '/var/www/html/index.html':
 </html>',
 }
 
-service { 'apache2':
-  ensure    => running,
-  enable    => true,
-  subscribe => Exec['fix-apache-500-error'],
+# Verify that Apache returns a 200 status code
+exec { 'verify-apache-status':
+  command     => 'curl -s -o /dev/null -w "%{http_code}" http://localhost/',
+  path        => '/usr/bin',
+  logoutput   => true,
+  unless      => 'curl -s -o /dev/null http://localhost/ || false',
+  subscribe   => Service['apache2'],
 }
