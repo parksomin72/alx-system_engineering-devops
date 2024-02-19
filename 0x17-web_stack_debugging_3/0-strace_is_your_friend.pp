@@ -1,7 +1,7 @@
 # 0-strace_is_your_friend.pp
 
-# Fix for Apache returning a 500 error
-exec { 'fix-apache-500-error':
+# Fix for Apache returning a 200 OK status code
+exec { 'fix-apache-200-ok':
   command     => '/bin/sed -i "s/LogLevel warn/LogLevel debug/g" /etc/apache2/apache2.conf && service apache2 restart',
   path        => '/bin',
   refreshonly => true,
@@ -25,5 +25,5 @@ file { '/var/www/html/index.html':
 service { 'apache2':
   ensure    => running,
   enable    => true,
-  subscribe => Exec['fix-apache-500-error'],
+  subscribe => Exec['fix-apache-200-ok'],
 }
