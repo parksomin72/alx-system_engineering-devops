@@ -1,14 +1,29 @@
 # 0-strace_is_your_friend.pp
 
-# Intentionally cause an error in Apache configuration to return 500 status code
-file { '/etc/apache2/sites-available/000-default.conf':
-  ensure  => present,
-  content => "This is an intentional error to cause Apache to return a 500 status code",
+# Fix for Apache returning a 500 error
+exec { 'fix-apache-500-error':
+  command     => '/bin/sed -i "s/LogLevel warn/LogLevel debug/g" /etc/apache2/apache2.conf && service apache2 restart',
+  path        => '/bin',
+  refreshonly => true,
 }
 
-# Restart Apache to apply changes
+# Configure Apache to serve the correct page
+file { '/var/www/html/index.html':
+  ensure  => present,
+  content => '<!DOCTYPE html>
+<html>
+<head>
+  <title>Holberton - Just another WordPress site</title>
+</head>
+<body>
+  <h1>Welcome to Holberton</h1>
+  <p>Yet another bug by a Holberton student</p>
+</body>
+</html>',
+}
+
 service { 'apache2':
   ensure    => running,
   enable    => true,
-  require   => File['/etc/apache2/sites-available/000-default.conf'],
+  subscribe => Exec['fix-apache-500-error'],
 }
