@@ -1,5 +1,3 @@
-# Puppet manifest to optimize Nginx configuration to handle ApacheBench load
-
 # Ensure Nginx package is installed
 package { 'nginx':
   ensure => installed,
@@ -15,8 +13,8 @@ file { '/etc/nginx/sites-available/default':
 
 # Define Nginx service
 service { 'nginx':
-  ensure  => running,
-  enable  => true,
+  ensure => running,
+  enable => true,
 }
 
 # Define an exec resource to reload Nginx configuration
