@@ -1,39 +1,15 @@
 #!/usr/bin/env bash
+# This script installs nginx on a new Ubuntu machine and configures it
 
-# Set up colors for terminal output
-BLUE='\e[1;34m'
-BROWN='\e[0;33m'
-GREEN='\e[1;32m'
-RESET='\033[0m'
+# Install nginx
+apt-get update
+apt-get -y install nginx
 
-# Print a message with blue color
-echo -e "${BLUE}Updating and installing ${BROWN}Nginx${BLUE}.${RESET}\n"
+# Ensure nginx is listening on port 80
+sed -i 's/^\(listen .*:\).*/\180;/' /etc/nginx/sites-available/default
 
-# Update and install Nginx
-sudo apt-get update -y -qq
-sudo apt-get install nginx -y
+# Restart nginx without systemctl
+service nginx restart
 
-# Print a message with blue color
-echo -e "\n${BLUE}Performing additional setup.${RESET}\n"
-
-# Start Nginx service
-sudo service nginx start
-
-# Allow Nginx on the firewall
-sudo ufw allow 'Nginx HTTP'
-
-# Give the user ownership of website files
-sudo chown -R "$USER":"$USER" /var/www/html
-sudo chmod -R 755 /var/www
-
-# Backup default index
-cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
-
-# Create a new index with "Hello World!"
-echo -e "Hello World!" | sudo dd status=none of=/var/www/html/index.nginx-debian.html
-
-# Restart Nginx
-sudo service nginx restart
-
-# Print a completion message with green color
-echo -e "\n${GREEN}Setup completed.${RESET} \n"
+# Create index.html with "Hello World!"
+echo "Hello World!" > /var/www/html/index.html
