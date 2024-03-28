@@ -16,3 +16,13 @@ def number_of_subscribers(subreddit):
         return subscribers
     else:
         return 0
+if __name__ == '__main__':
+    subreddit = sys.argv[1] if len(sys.argv) > 1 else None
+    if subreddit:
+        subscribers = number_of_subscribers(subreddit)
+        if subscribers != 0:
+            print("OK")
+        else:
+            print("Invalid subreddit or error occurred.")
+    else:
+        print("Please pass an argument for the subreddit to search.")
